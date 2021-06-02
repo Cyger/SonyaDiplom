@@ -16,17 +16,38 @@ def doc():
             #print(paragraph.text)
 
     #document.save('test.docx')
-
+# 4 8 13 17 22 26 31 35
 #openpyxl
 def xls():
     file = pandas.ExcelFile('IST4.xls')
 
-    sheet = file.sheet_names
+    courses_index = [4,8,13,17,22,26,31,35]
+    subj = "Технологии программирования"
+    dr = pandas.read_excel(file, 'Диаграмма курсов')
+   
+    attestation = []
 
-    df = pandas.read_excel(file, 'План')
-    volume = df.iat[20,14]
+    for i in range(8):
+        for j in range(350):
+            volume = str(dr.iat[j,courses_index[i]])
+            if subj in volume:
+                #if ('За' in volume) and ('ЗаО' not in volume):
+                    #attestation.append('Сем ' + str(i+1) + ' - За')
+                    #break
+                #if 'ЗаО' in volume:
+                    #attestation.append('Сем ' + str(i+1) + ' - ЗаО')
+                    #pring(volume)
+                if 'За' in volume and 'ЗаО' not in volume:
+                    attestation.append('Сем ' + str(i+1) + ' - За')
+                    break
+                if 'ЗаО' in volume:
+                    attestation.append('Сем ' + str(i+1) + ' - ЗаО')
+                    break
+                if 'Экз' in volume:
+                    attestation.append('Сем ' + str(i+1) + ' - Экз')
+                    break
 
-    return volume
+
     
 def discipline_volume(discipline):
 
@@ -98,27 +119,39 @@ def discipline_volume(discipline):
             paragraph.text += '   ' + developer_department
             break
 
-###   Промежуточная аттестация
-    for i in range(df.shape[0]):
-        if df.iat[i,3] == discipline:
-            exam = df.iat[i,6]
-            score_test = df.iat[i,7]
-            test = df.iat[i,8]
 
-    if type(exam) is str:
-        attestation = 'экзамен'
-    elif type(score_test) is str:
-        attestation = 'зачет с оценкой'
-    elif type(test) is str:
-        attestation = 'зачет'
-    else:
-        print("ERROR")
-        return 1
+###   Промежуточная аттестация
+    courses_index = [4,8,13,17,22,26,31,35]
+    dr = pandas.read_excel(xls_file, 'Диаграмма курсов')
+    attestation = []
+
+    for i in range(8):
+        for j in range(350):
+            volume = str(dr.iat[j,courses_index[i]])
+            if discipline in volume:
+                #if ('За' in volume) and ('ЗаО' not in volume):
+                    #attestation.append('Сем ' + str(i+1) + ' - За')
+                    #break
+                #if 'ЗаО' in volume:
+                    #attestation.append('Сем ' + str(i+1) + ' - ЗаО')
+                    #pring(volume)
+                if 'За' in volume and 'ЗаО' not in volume:
+                    attestation.append('Сем ' + str(i+1) + ' - За')
+                    break
+                if 'ЗаО' in volume:
+                    attestation.append('Сем ' + str(i+1) + ' - ЗаО')
+                    break
+                if 'Экз' in volume:
+                    attestation.append('Сем ' + str(i+1) + ' - Экз')
+                    break
 
     search_line = 'Промежуточная аттестация'
+    attestation_string = ''
     for paragraph in doc_file.paragraphs:
         if search_line in paragraph.text:
-            paragraph.text += '   ' + attestation
+            for i in attestation:
+                attestation_string += '   ' + i
+            paragraph.text += '   ' + attestation_string
             break
 
 
@@ -140,4 +173,5 @@ def discipline_volume(discipline):
 
 
 discipline_volume("Технологии программирования")
+#xls()
 
